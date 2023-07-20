@@ -30,7 +30,6 @@ dayjs.updateLocale('en', {
 export function History() {
   const [data, setdata] = useState([])
   const [allData, setallData] = useState([])
-
    
     useEffect(() => {
       
