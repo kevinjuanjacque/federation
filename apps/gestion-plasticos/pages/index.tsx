@@ -39,7 +39,7 @@ export function Index() {
   const handleLogin = async () => {
       try {
         setLoading(true);
-        const resp  = await axios.post('/auth',{
+        const resp  = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+'/auth',{
           email:Email,
           password:Password
         });
