@@ -1,6 +1,7 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import './styles.css';
+import NavBar from './components/navbar';
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
@@ -8,8 +9,9 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Welcome to gestion-plasticos!</title>
       </Head>
-      <main className="app">
-        <Component {...pageProps} />
+      <main className="flex flex-col h-screen">
+        <NavBar />
+        <Component className="flex-1" {...pageProps} />
       </main>
     </>
   );
