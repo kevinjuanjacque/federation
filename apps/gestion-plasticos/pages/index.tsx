@@ -1,9 +1,11 @@
 import { Button, Callout, Card, Metric, TextInput } from "@tremor/react";
 import { UserIcon, KeyIcon, ExclamationIcon } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
-import { API } from "./lib/axios.config";
-import useUser from "./lib/useUser";
+
+import useUser from "./components/useUser";
 import { useRouter } from "next/router";
+import axios from "axios";
+
 
 
 export function Index() {
@@ -14,8 +16,9 @@ export function Index() {
   const [Email, setEmail] = useState("")
   const [Password, setPassword] = useState("")
 
-  const user = useUser({ redirectTo: '/home' });
+  const [user] = useUser({ redirectTo: '/home' });
   const router = useRouter()
+
 
 
   useEffect(() => {
@@ -36,7 +39,7 @@ export function Index() {
   const handleLogin = async () => {
       try {
         setLoading(true);
-        const resp  = await API().post('/auth',{
+        const resp  = await axios.post('/auth',{
           email:Email,
           password:Password
         });

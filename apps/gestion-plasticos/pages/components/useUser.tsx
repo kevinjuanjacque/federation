@@ -1,8 +1,11 @@
 
+import axios from 'axios'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import useSWR from 'swr'
-import { API } from './axios.config'
+
+
+
+
 
 export default function useUser({
     redirectTo = '',
@@ -10,12 +13,19 @@ export default function useUser({
   } = {}){
     const [IsLogin, setIsLogin] = useState(false)
     const router = useRouter()
+
     useEffect(() => {
         
         
 
         const test = async ()=>{
-            const resp = await API().get("/auth").catch((err)=>err.response)
+            const resp = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+"/auth",{
+                headers:{
+                    Authorization:localStorage.getItem('token')
+                    ? 'Bearer ' + localStorage.getItem('token')
+                    : null
+                }
+            }).catch((err)=>err.response)
             console.log(resp.data)
         if (!redirectTo || resp.data !== "OK"){ 
             setIsLogin(false)
@@ -36,6 +46,6 @@ export default function useUser({
         test()
       }, [redirectIfFound, redirectTo,router])
 
-      return { IsLogin }
+      return [ IsLogin ]
 
 }

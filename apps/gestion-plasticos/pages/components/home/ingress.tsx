@@ -1,11 +1,12 @@
 import { Button, DatePicker, DateRangePickerValue, TextInput } from "@tremor/react";
+import axios from "axios";
 import { es } from "date-fns/locale";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
-import fs from 'fs'
-import { API } from "../../lib/axios.config";
-import { set } from "mongoose";
+
+
+
 
 export function Ingress() {
   
@@ -15,6 +16,7 @@ export function Ingress() {
     const [fecha, setFecha] = useState("")
     const [numero, setNumero] = useState(undefined)
      const [file, setfile] = useState(null)
+
 
     const handleDateChange = (e:any) => {
       setFecha(dayjs(e).format("MM-DD-YYYY"))
@@ -43,7 +45,13 @@ export function Ingress() {
       data.append('fecha', fecha);
 
      try {
-      await API().post('/facturas', data)
+      await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+'/facturas', data,{
+        headers:{
+          Authorization:localStorage.getItem('token')
+          ? 'Bearer ' + localStorage.getItem('token')
+          : null
+      }
+      })
       alert("Factura ingresada correctamente")
       setFecha("")
       setNumero(undefined)

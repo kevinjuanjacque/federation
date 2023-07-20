@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { API } from "../../lib/axios.config";
 import { Divider, TextInput } from "@tremor/react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
+import axios from "axios";
+
+
 
 dayjs.extend(relativeTime)
 dayjs.extend(updateLocale)
@@ -33,7 +35,13 @@ export function History() {
     useEffect(() => {
       
       const getHistory = async () => {
-        const resp = await API().get('/facturas');
+        const resp = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL+'/facturas',{
+          headers:{
+            Authorization:localStorage.getItem('token')
+            ? 'Bearer ' + localStorage.getItem('token')
+            : null
+        }
+        });
         setallData(resp.data)
         setdata(resp.data)
       }
