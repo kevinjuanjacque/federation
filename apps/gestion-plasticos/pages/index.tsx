@@ -50,6 +50,8 @@ export function Index() {
         router.push('/home')
       } catch (error) {
         setErrors(true);
+        setLoading(false);
+
       }
   }
 
