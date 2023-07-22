@@ -12,8 +12,9 @@ export function Ingress() {
   
 
     const [disabled, setDisabled] = useState(true)
+    const [Loadin, setLoadin] = useState(false)
 
-    const [fecha, setFecha] = useState("")
+    const [fecha, setFecha] = useState(dayjs(new Date()).format("MM-DD-YYYY"))
     const [numero, setNumero] = useState(undefined)
      const [file, setfile] = useState(null)
 
@@ -45,6 +46,7 @@ export function Ingress() {
       data.append('fecha', fecha);
 
      try {
+      setLoadin(true)
       await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+'/facturas', data,{
         headers:{
           Authorization:localStorage.getItem('token')
@@ -52,12 +54,16 @@ export function Ingress() {
           : null
       }
       })
+      setLoadin(false)
       alert("Factura ingresada correctamente")
       setFecha("")
       setNumero(undefined)
       setfile(null)
       e.target.reset()
      } catch (error) {
+      setLoadin(false)
+      alert("Ocurrio un error al ingresar la factura")
+
         console.log(error)
      }  
 
@@ -82,12 +88,12 @@ export function Ingress() {
 
           <TextInput value={numero} placeholder="Ingresar numero de factura" typeof="number" onChange={handleNumberChange} />
 
-          <DatePicker  locale={es} placeholder="Ingresa la fecha de expiración" onValueChange={handleDateChange}/>
+          <DatePicker defaultValue={new Date()} locale={es} placeholder="Ingresa fecha de emision" onValueChange={handleDateChange}/>
 
           
           <input id="fileinput" type="file" placeholder="Ingresar factura" onChange={handleFileChange}/>
 
-          <Button disabled={disabled} type="submit"> Enviar </Button>
+          <Button loading={Loadin} disabled={disabled} type="submit"> Enviar </Button>
           </form>
         </section>
       </div>

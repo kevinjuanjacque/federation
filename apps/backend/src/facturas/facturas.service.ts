@@ -27,16 +27,16 @@ export class FacturasService {
         factura.fecha = dayjs(factura.fecha,'MM-DD-YYYY').toDate();
         const newFactura = await this.facturaModel.create(factura);
         await this.createEventIcs(newFactura);
-        this.sendEmail('facturas.fabrica@outlook.com','Nueva factura',`Se ha creado una nueva factura con el id: ${newFactura.numero}`)
+        this.sendEmail('facturas.fabrica@outlook.com',`Nueva factura ingresada ${factura.numero}`,`Se ha creado una nueva factura con el id: ${newFactura.numero}`, factura.static)
         return newFactura;
     }
 
 
     private async createEventIcs(factura:CreateFacturaDto){
 
-        const dateStrat = dayjs(factura.fecha,{format:'MM-DD-YYYY HH:mm:ss', locale:'UTC-4'}).set('hours',5).format('YYYYMMDDTHHmmss')+'Z'
+        const dateStrat = dayjs(factura.fecha,{format:'MM-DD-YYYY HH:mm:ss', locale:'UTC-4'}).set('hours',5).set('month',3).format('YYYYMMDDTHHmmss')+'Z'
         
-        const dateEND = dayjs(factura.fecha,{format:'MM-DD-YYYY HH:mm:ss', locale:'UTC-4'}).set('hours',23).format('YYYYMMDDTHHmmss')+'Z'
+        const dateEND = dayjs(factura.fecha,{format:'MM-DD-YYYY HH:mm:ss', locale:'UTC-4'}).set('hours',23).set('month',3).format('YYYYMMDDTHHmmss')+'Z'
 
 
 
@@ -75,7 +75,7 @@ END:VCALENDAR`;
         return this.facturaModel.find();
     }
 
-    private async sendEmail(to: string, subject: string, body: string) {
+    private async sendEmail(to: string, subject: string, body: string,fileName:string) {
         const mailOptions = {
           from: 'kevin.jacque@alumnos.ucentral.cl',
           to,
@@ -94,8 +94,13 @@ END:VCALENDAR`;
                 {
                   filename:'evento.ics',
                   path: join(__dirname,'assets',`event.ics`),
-                  cid:'perroti123'
-              }
+                  cid:'evento'
+              },
+              {
+                filename:fileName,
+                path: this.getAssetFileFactura(fileName),
+                cid:'factura'
+            }
               ]
             })
           
