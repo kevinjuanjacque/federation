@@ -34,9 +34,9 @@ export class FacturasService {
 
     private async createEventIcs(factura:CreateFacturaDto){
 
-        const dateStrat = dayjs(factura.fecha,{format:'MM-DD-YYYY HH:mm:ss', locale:'UTC-4'}).set('hours',5).set('month',3).format('YYYYMMDDTHHmmss')+'Z'
+        const dateStrat = dayjs(factura.fecha,{format:'MM-DD-YYYY HH:mm:ss', locale:'UTC-4'}).set('hours',5).add(90,"day").format('YYYYMMDDTHHmmss')+'Z'
         
-        const dateEND = dayjs(factura.fecha,{format:'MM-DD-YYYY HH:mm:ss', locale:'UTC-4'}).set('hours',23).set('month',3).format('YYYYMMDDTHHmmss')+'Z'
+        const dateEND = dayjs(factura.fecha,{format:'MM-DD-YYYY HH:mm:ss', locale:'UTC-4'}).set('hours',23).add(90,"day").format('YYYYMMDDTHHmmss')+'Z'
 
 
 
