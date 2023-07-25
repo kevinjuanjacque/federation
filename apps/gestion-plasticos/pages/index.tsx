@@ -2,7 +2,7 @@ import { Button, Callout, Card, Metric, TextInput } from "@tremor/react";
 import { UserIcon, KeyIcon, ExclamationIcon } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 
-import useUser from "./components/useUser";
+import useUser from "./components/AuthComponents";
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -16,7 +16,7 @@ export function Index() {
   const [Email, setEmail] = useState("")
   const [Password, setPassword] = useState("")
 
-  const [user] = useUser({ redirectTo: '/home' });
+
   const router = useRouter()
 
 
@@ -57,7 +57,7 @@ export function Index() {
 
 
   return (
-    <div className="bg-cuarto h-full flex flex-col justify-center items-center ">
+    <div className="bg-cuarto flex-1 h-full flex flex-col justify-center items-center ">
       <main className="  max-w-screen-xl">
         <Card className="p-5 flex flex-col  gap-2"  title="Iniciar sesion">
           <Metric>Iniciar sesion</Metric>
