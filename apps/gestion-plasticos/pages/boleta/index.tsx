@@ -17,6 +17,8 @@ import { useForm } from '../../hooks/useForm';
 import axios from 'axios';
 import { DocumentAddIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline';
 import { InputBolsa } from '../components/boleta/InputBolsa';
+import { es } from "date-fns/locale";
+
 
 export const Index = () => {
   const { formulario, setFormulario, handleChange } = useForm({
@@ -189,6 +191,7 @@ export const Index = () => {
 
               <DatePicker
                 value={formulario.fecha}
+                locale={es} 
                 onValueChange={(value) => {
                   setFormulario({ ...formulario, fecha: value });
                 }}
