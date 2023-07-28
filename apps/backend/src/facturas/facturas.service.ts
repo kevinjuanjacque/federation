@@ -189,10 +189,13 @@ END:VCALENDAR`;
 
   async generatePDF(params: CreateBoletaDto) {
     const PDFGenerator: Buffer = await new Promise((resolve, reject) => {
-      const doc = new PDFDocument();
+      const doc = new PDFDocument({
+        size: 'LETTER',
+      });
 
       // doc.image(this.getAssetFileFactura('logo.png'), 0, 0, {width: 600})
-
+      const gapLineText = 3;
+      const fontSizeDataTable = 10;
       doc
         .fontSize(18)
         .font('Helvetica-Bold')
@@ -200,19 +203,19 @@ END:VCALENDAR`;
           align: 'center',
         });
       doc.moveDown();
-      doc.fontSize(15).font('Helvetica');
+      doc.fontSize(12).font('Helvetica');
 
       doc.text(`Nombre: ${params.nombreCliente}`, {
-        lineGap: 5,
+        lineGap: gapLineText,
       });
       doc.text(`Rut: ${params.rutCliente}`, {
-        lineGap: 5,
+        lineGap: gapLineText,
       });
       doc.text(`Fecha: ${dayjs(params.fecha).format('DD-MM-YYYY')}`, {
-        lineGap: 5,
+        lineGap: gapLineText,
       });
       doc.text(`Bultos: ${params.bultos}`, {
-        lineGap: 5,
+        lineGap: gapLineText,
       });
       doc.moveDown();
 
@@ -229,7 +232,7 @@ END:VCALENDAR`;
             tipo: {
               label: item.tipo,
               options: {
-                fontSize: 12,
+                fontSize: fontSizeDataTable,
                 fontFamily: 'Helvetica',
                 separation: true,
               },
@@ -237,7 +240,7 @@ END:VCALENDAR`;
             bolsa: {
               label: item.bolsa,
               options: {
-                fontSize: 12,
+                fontSize: fontSizeDataTable,
                 fontFamily: 'Helvetica',
                 separation: true,
               },
@@ -245,7 +248,7 @@ END:VCALENDAR`;
             cantidad: {
               label: item.cantidad,
               options: {
-                fontSize: 12,
+                fontSize: fontSizeDataTable,
                 fontFamily: 'Helvetica',
                 separation: true,
               },
@@ -256,7 +259,7 @@ END:VCALENDAR`;
                   ? formatMoney(params.precio.precioNormal)
                   : formatMoney(params.precio.precioEspecial),
               options: {
-                fontSize: 12,
+                fontSize: fontSizeDataTable,
                 fontFamily: 'Helvetica',
                 separation: true,
               },
@@ -264,7 +267,7 @@ END:VCALENDAR`;
             precio: {
               label: formatMoney(item.precio),
               options: {
-                fontSize: 12,
+                fontSize: fontSizeDataTable,
                 fontFamily: 'Helvetica',
                 separation: true,
               },
@@ -327,10 +330,12 @@ END:VCALENDAR`;
               ],
         },
         {
-          columnSpacing: 10,
+          columnSpacing: 5,
           padding: [5, 5, 5, 5],
-          prepareHeader: () => doc.font('Helvetica-Bold').fontSize(12),
-          prepareRow: () => doc.font('Helvetica-Bold').fontSize(12),
+          prepareHeader: () =>
+            doc.font('Helvetica-Bold').fontSize(fontSizeDataTable),
+          prepareRow: () =>
+            doc.font('Helvetica-Bold').fontSize(fontSizeDataTable),
           title: {
             label: 'Detalle de la boleta',
             fontSize: 15,
