@@ -177,8 +177,13 @@ END:VCALENDAR`;
     return boleta;
   }
 
-  async getOneBoleta(id:string) {
+  async getOneBoleta(id: string) {
     const boleta = await this.boletaModel.findById(id);
+    return boleta;
+  }
+
+  async deleteBoleta(id: string) {
+    const boleta = await this.boletaModel.findByIdAndDelete(id);
     return boleta;
   }
 
@@ -197,20 +202,19 @@ END:VCALENDAR`;
       doc.moveDown();
       doc.fontSize(15).font('Helvetica');
 
-      doc.text(`Nombre: ${params.nombreCliente}`,{
+      doc.text(`Nombre: ${params.nombreCliente}`, {
         lineGap: 5,
       });
-      doc.text(`Rut: ${params.rutCliente}`,{
+      doc.text(`Rut: ${params.rutCliente}`, {
         lineGap: 5,
       });
-      doc.text(`Fecha: ${dayjs(params.fecha).format('DD-MM-YYYY')}`,{
+      doc.text(`Fecha: ${dayjs(params.fecha).format('DD-MM-YYYY')}`, {
         lineGap: 5,
       });
-      doc.text(`Bultos: ${params.bultos}`,{
+      doc.text(`Bultos: ${params.bultos}`, {
         lineGap: 5,
       });
       doc.moveDown();
-
 
       doc.table(
         {
@@ -245,8 +249,12 @@ END:VCALENDAR`;
                 fontFamily: 'Helvetica',
                 separation: true,
               },
-            },costo: {
-              label: item.tipo == 'Normal' ? formatMoney(params.precio.precioNormal) : formatMoney(params.precio.precioEspecial),
+            },
+            costo: {
+              label:
+                item.tipo == 'Normal'
+                  ? formatMoney(params.precio.precioNormal)
+                  : formatMoney(params.precio.precioEspecial),
               options: {
                 fontSize: 12,
                 fontFamily: 'Helvetica',
@@ -262,47 +270,72 @@ END:VCALENDAR`;
               },
             },
           })),
-          rows: params.iva ? [
-            [
-              '',
-              '',
-              '',
-              'Monto Bruto',
-              formatMoney(params.detalle
-                .reduce((acc, curr) => acc + Number(curr.precio), 0)
-                .toString()),
-            ],
-            ['','','','IVA',formatMoney(Math.round(params.detalle
-            .reduce((acc, curr) => acc + Number(curr.precio), 0)*0.19)
-            .toString())],
-            [
-              '',
-              '',
-              '',
-              'Monto Total',
-              formatMoney(Math.round(params.detalle
-                .reduce((acc, curr) => acc + Number(curr.precio), 0)*1.19)
-                .toString()),
-            ],
-          ]:[
-            
-            [
-              '',
-              '',
-              '',
-              'Monto Total',
-              formatMoney(params.detalle
-                .reduce((acc, curr) => acc + Number(curr.precio), 0)
-                .toString()),
-            ],
-          ],
+          rows: params.iva
+            ? [
+                [
+                  '',
+                  '',
+                  '',
+                  'Monto Bruto',
+                  formatMoney(
+                    params.detalle
+                      .reduce((acc, curr) => acc + Number(curr.precio), 0)
+                      .toString()
+                  ),
+                ],
+                [
+                  '',
+                  '',
+                  '',
+                  'IVA',
+                  formatMoney(
+                    Math.round(
+                      params.detalle.reduce(
+                        (acc, curr) => acc + Number(curr.precio),
+                        0
+                      ) * 0.19
+                    ).toString()
+                  ),
+                ],
+                [
+                  '',
+                  '',
+                  '',
+                  'Monto Total',
+                  formatMoney(
+                    Math.round(
+                      params.detalle.reduce(
+                        (acc, curr) => acc + Number(curr.precio),
+                        0
+                      ) * 1.19
+                    ).toString()
+                  ),
+                ],
+              ]
+            : [
+                [
+                  '',
+                  '',
+                  '',
+                  'Monto Total',
+                  formatMoney(
+                    params.detalle
+                      .reduce((acc, curr) => acc + Number(curr.precio), 0)
+                      .toString()
+                  ),
+                ],
+              ],
         },
         {
           columnSpacing: 10,
           padding: [5, 5, 5, 5],
           prepareHeader: () => doc.font('Helvetica-Bold').fontSize(12),
           prepareRow: () => doc.font('Helvetica-Bold').fontSize(12),
-          title: {label:'Detalle de la boleta', fontSize: 15, fontFamily: 'Helvetica-Bold', },
+          title: {
+            label: 'Detalle de la boleta',
+            fontSize: 15,
+            fontFamily: 'Helvetica-Bold',
+          },
         }
       );
 

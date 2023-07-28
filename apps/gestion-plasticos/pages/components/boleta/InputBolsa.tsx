@@ -5,6 +5,7 @@ import {
   SearchSelectItem,
   TextInput,
 } from '@tremor/react';
+import { formatMoney } from 'apps/gestion-plasticos/helpers/formatAmount';
 import axios from 'axios';
 import exp from 'constants';
 import React, { ChangeEventHandler, use, useEffect, useState } from 'react';
@@ -50,35 +51,34 @@ export const InputBolsa = ({
     getBolsas();
   }, []);
 
-  useEffect(() => {
-    if (BolsaSelected) {
-      const precio =
-        BolsaSelected.tipo === 'Normal'
-          ? precios?.precioNormal ?? '0'
-          : precios?.precioEspecial ?? '0';
+  // useEffect(() => {
+  //   console.log(BolsaSelected);
+  //   if (BolsaSelected) {
+  //     const precio =
+  //       BolsaSelected.tipo === 'Normal'
+  //         ? precios?.precioNormal ?? '0'
+  //         : precios?.precioEspecial ?? '0';
 
-      setDetalle((detalle: any) => {
-        return detalle.map((item: any, i: number) => {
-          if (i === position) {
-            return { ...item, precio: precio ?? 0 * item?.cantidad ?? 0 };
-          } else {
-            return item;
-          }
-        });
-      });
-    }
-  }, [itemDetail, precios]);
+  //     setDetalle((detalle: any) => {
+  //       return detalle.map((item: any, i: number) => {
+  //         if (i === position) {
+  //           return { ...item, precio: precio ?? 0 * item?.cantidad ?? 0 };
+  //         } else {
+  //           return item;
+  //         }
+  //       });
+  //     });
+  //   }
+  // }, [precios, BolsaSelected]);
 
   return (
-    <div className="flex flex-col md:flex-row gap-3 items-center justify-center ">
-      <div>
+    <div className="flex flex-col md:flex-row gap-3 items-end justify-center ">
+      <div className="w-full">
         <label className="text-sm p-3 ">Bolsa</label>
         <SearchSelect
           value={JSON.stringify(BolsaSelected)}
           onValueChange={(value) => {
             const bolsa = JSON.parse(value);
-            console.log(bolsa);
-
             setBolsaSelected(bolsa);
             setDetalle((detalle: any) => {
               return detalle.map((item: any, i: number) => {
@@ -99,7 +99,7 @@ export const InputBolsa = ({
           ))}
         </SearchSelect>
       </div>
-      <div>
+      <div className="w-full">
         <label className="text-sm p-3 ">Cantidad</label>
         <TextInput
           value={itemDetail?.cantidad ?? ''}
@@ -107,10 +107,20 @@ export const InputBolsa = ({
           name="cantidad"
           onChange={(e) => {
             const value = e.target.value;
+
+            const precio =
+              itemDetail.tipo === 'Normal'
+                ? precios?.precioNormal ?? '0'
+                : precios?.precioEspecial ?? '0';
             setDetalle((detalle: any) => {
               return detalle.map((item: any, i: number) => {
                 if (i === position) {
-                  return { ...item, cantidad: value };
+                  const precioCal = parseInt(precio) * parseFloat(value);
+                  return {
+                    ...item,
+                    cantidad: value,
+                    precio: isNaN(precioCal) ? 0 : precioCal,
+                  };
                 } else {
                   return item;
                 }
@@ -123,11 +133,11 @@ export const InputBolsa = ({
       <div>
         <label className="text-sm p-3 ">Precio</label>
         <TextInput
-          value={
+          value={formatMoney(
             isNaN(itemDetail?.precio ?? 0)
               ? '0'
               : Math.round(itemDetail?.precio ?? 0).toString()
-          }
+          )}
           disabled={true}
           type="text"
           name="precio"
@@ -144,7 +154,7 @@ export const InputBolsa = ({
               return detalle.filter((item: any, i: number) => {
                 return i !== position;
               });
-            })
+            });
           }}
         >
           Eliminar
@@ -153,6 +163,5 @@ export const InputBolsa = ({
     </div>
   );
 };
-
 
 export default InputBolsa;

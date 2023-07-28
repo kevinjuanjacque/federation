@@ -1,103 +1,114 @@
-import { Button, DatePicker, DateRangePickerValue, TextInput } from "@tremor/react";
-import axios from "axios";
-import { es } from "date-fns/locale";
-import dayjs from "dayjs";
-import { useEffect, useState } from "react";
-
-
-
-
+import {
+  Button,
+  DatePicker,
+  DateRangePickerValue,
+  TextInput,
+} from '@tremor/react';
+import axios from 'axios';
+import { es } from 'date-fns/locale';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 
 export function Ingress() {
-  
+  const [disabled, setDisabled] = useState(true);
+  const [Loadin, setLoadin] = useState(false);
 
-    const [disabled, setDisabled] = useState(true)
-    const [Loadin, setLoadin] = useState(false)
+  const [fecha, setFecha] = useState(dayjs(new Date()).format('MM-DD-YYYY'));
+  const [numero, setNumero] = useState(undefined);
+  const [file, setfile] = useState(null);
 
-    const [fecha, setFecha] = useState(dayjs(new Date()).format("MM-DD-YYYY"))
-    const [numero, setNumero] = useState(undefined)
-     const [file, setfile] = useState(null)
+  const handleDateChange = (e: any) => {
+    setFecha(dayjs(e).format('MM-DD-YYYY'));
+  };
 
+  const handleNumberChange = (e: any) => {
+    setNumero(e.target.value);
+  };
 
-    const handleDateChange = (e:any) => {
-      setFecha(dayjs(e).format("MM-DD-YYYY"))
+  const handleFileChange = (e: any) => {
+    if (e.target.files && e.target.files[0]) {
+      const img = e.target.files[0];
+      setfile(img);
     }
+  };
 
-    const handleNumberChange = (e:any) => {
-        console.log(e.target.value)
-        setNumero(e.target.value)
+  const handleOnSubmit = async (e: any) => {
+    e.preventDefault();
 
+    let data = new FormData();
+    data.append('file', file!);
+    data.append('numero', numero!);
+    data.append('fecha', fecha);
+
+    try {
+      setLoadin(true);
+      await axios.post(
+        process.env.NEXT_PUBLIC_BACKEND_URL + '/facturas',
+        data,
+        {
+          headers: {
+            Authorization: localStorage.getItem('token')
+              ? 'Bearer ' + localStorage.getItem('token')
+              : null,
+          },
+        }
+      );
+      setLoadin(false);
+      alert('Factura ingresada correctamente');
+      setFecha('');
+      setNumero(undefined);
+      setfile(null);
+      e.target.reset();
+    } catch (error) {
+      setLoadin(false);
+      alert('Ocurrio un error al ingresar la factura');
+
+      console.log(error);
     }
+  };
 
-    const handleFileChange = (e:any) => {
-      if (e.target.files && e.target.files[0]) {
-        const img = e.target.files[0];
-        setfile(img);
-      }
+  useEffect(() => {
+    if (fecha && numero && file) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
     }
+  }, [fecha, numero, file]);
 
+  return (
+    <div className="flex flex-col justify-center items-center">
+      <h1 className="text-2xl font-bold mb-5">Ingresar Factura</h1>
+      <section>
+        <form className="flex flex-col gap-5" onSubmit={handleOnSubmit}>
+          <TextInput
+            value={numero}
+            placeholder="Ingresar numero de factura"
+            typeof="number"
+            onChange={handleNumberChange}
+          />
 
-    const handleOnSubmit =async (e:any) => {
-      e.preventDefault()
+          <DatePicker
+            defaultValue={new Date()}
+            locale={es}
+            placeholder="Ingresa fecha de emision"
+            onValueChange={handleDateChange}
+          />
 
-      let data = new FormData();
-      data.append('file', file!);
-      data.append('numero', numero!);
-      data.append('fecha', fecha);
+          <input
+            id="fileinput"
+            type="file"
+            placeholder="Ingresar factura"
+            onChange={handleFileChange}
+          />
 
-     try {
-      setLoadin(true)
-      await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL+'/facturas', data,{
-        headers:{
-          Authorization:localStorage.getItem('token')
-          ? 'Bearer ' + localStorage.getItem('token')
-          : null
-      }
-      })
-      setLoadin(false)
-      alert("Factura ingresada correctamente")
-      setFecha("")
-      setNumero(undefined)
-      setfile(null)
-      e.target.reset()
-     } catch (error) {
-      setLoadin(false)
-      alert("Ocurrio un error al ingresar la factura")
+          <Button loading={Loadin} disabled={disabled} type="submit">
+            {' '}
+            Enviar{' '}
+          </Button>
+        </form>
+      </section>
+    </div>
+  );
+}
 
-        console.log(error)
-     }  
-
-    }
-
-    useEffect(() => {
-      console.log(fecha, numero, file)
-      if(fecha && numero && file) {
-        setDisabled(false)
-      } else {
-        setDisabled(true)
-      }
-    }, [fecha, numero, file])
-
-
-
-    return (
-      <div className="flex flex-col justify-center items-center">
-        <h1 className="text-2xl font-bold mb-5">Ingresar Factura</h1>
-        <section>
-          <form  className="flex flex-col gap-5" onSubmit={handleOnSubmit}>
-
-          <TextInput value={numero} placeholder="Ingresar numero de factura" typeof="number" onChange={handleNumberChange} />
-
-          <DatePicker defaultValue={new Date()} locale={es} placeholder="Ingresa fecha de emision" onValueChange={handleDateChange}/>
-
-          
-          <input id="fileinput" type="file" placeholder="Ingresar factura" onChange={handleFileChange}/>
-
-          <Button loading={Loadin} disabled={disabled} type="submit"> Enviar </Button>
-          </form>
-        </section>
-      </div>
-    );
-  }
-  
-  export default Ingress;
+export default Ingress;
