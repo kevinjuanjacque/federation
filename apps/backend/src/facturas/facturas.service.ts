@@ -214,6 +214,11 @@ END:VCALENDAR`;
       doc.text(`Fecha: ${dayjs(params.fecha).format('DD-MM-YYYY')}`, {
         lineGap: gapLineText,
       });
+
+      doc.text(`Dirección: ${params.dirCliente}`, {
+        lineGap: gapLineText,
+      });
+
       doc.text(`Bultos: ${params.bultos}`, {
         lineGap: gapLineText,
       });
