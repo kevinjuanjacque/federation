@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from '@tremor/react';
 import { MenuIcon } from '@heroicons/react/outline';
+import { Metadata } from 'next';
 
 function CustomApp({ Component, pageProps }: AppProps) {
   //TODO: change false
@@ -50,11 +51,12 @@ function CustomApp({ Component, pageProps }: AppProps) {
     <AuthComponents>
       <Head>
         <title>Welcome to gestion-plasticos!</title>
+        <link rel="manifest" href="/manifest.webmanifest" />
       </Head>
       <main className="flex flex-col min-h-screen">
         {Drawer && (
-          <div className="bg-black absolute z-10 bg-opacity-50 h-screen w-full">
-            <div className="bg-white w-full md:w-[50%] absolute z-20 h-screen opacity-100 ">
+          <div className="bg-black absolute z-10 bg-opacity-50 h-full top-0 bottom-0 right-0  w-full">
+            <div className="bg-white w-full md:w-[50%] fixed inset-y-0 left-0  z-20 opacity-100 ">
               <section>
                 <h1 className="text-2xl font-bold p-5">Menu</h1>
                 {menu.map((item, i) => {

@@ -14,9 +14,14 @@ const nextConfig = {
   },
 };
 
+const whitPWA = require('next-pwa')({
+  dest: 'public',
+});
+
 const plugins = [
   // Add more Next.js plugins to this list if needed.
   withNx,
+  whitPWA,
 ];
 
 module.exports = composePlugins(...plugins)(nextConfig);

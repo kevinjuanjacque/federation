@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Res,
   UploadedFile,
   UseGuards,
@@ -56,6 +57,14 @@ export class FacturasController {
   @Get()
   async getFacturas() {
     return this.facturasService.getAllFacturas();
+  }
+
+  @Put(':id')
+  async updateStateFactura(
+    @Body() body: { state: 'pendiente' | 'pagada' | 'anulada' },
+    @Param('id') id: string
+  ) {
+    return this.facturasService.updatedFactura(body.state, id);
   }
 
   @Post('bolsas')
@@ -144,8 +153,8 @@ export class FacturasController {
     if (!client) {
       const newClient = await this.facturasService.createClient({
         name: factura.nombreCliente,
-        rut: '',
-        dir: '',
+        rut: factura.rutCliente,
+        dir: factura.dirCliente,
       });
     }
     return;

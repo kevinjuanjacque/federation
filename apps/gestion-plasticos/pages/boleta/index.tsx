@@ -15,7 +15,13 @@ import React, {
 } from 'react';
 import { useForm } from '../../hooks/useForm';
 import axios from 'axios';
-import { DocumentAddIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline';
+import {
+  ArrowDownIcon,
+  ArrowNarrowDownIcon,
+  DocumentAddIcon,
+  PlusIcon,
+  TrashIcon,
+} from '@heroicons/react/outline';
 import { InputBolsa } from '../components/boleta/InputBolsa';
 import { es } from 'date-fns/locale';
 import { formatMoney } from 'apps/gestion-plasticos/helpers/formatAmount';
@@ -301,7 +307,7 @@ export const Index = () => {
             ></input>
             <label className="text-sm p-3 ">CON IVA</label>
           </div>
-          <section className="flex items-center justify-center mt-3 gap-2">
+          <section className="flex flex-col md:flex-row items-stretch md:items-center justify-center mt-3 gap-2">
             <Button
               disabled={PrecioSelected === null}
               onClick={() => {
@@ -329,7 +335,9 @@ export const Index = () => {
                   href={imageURL.url}
                   download={new Date().getTime() + `-factura.pdf`}
                 >
-                  <Button color="gray">Descargar Imagen</Button>
+                  <Button color="gray" icon={ArrowNarrowDownIcon}>
+                    Descargar Imagen
+                  </Button>
                 </a>
               </>
             )}

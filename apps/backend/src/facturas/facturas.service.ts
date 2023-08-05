@@ -48,6 +48,12 @@ export class FacturasService {
     return newFactura;
   }
 
+  async updatedFactura(state: 'pendiente' | 'pagada' | 'anulada', id: string) {
+    const factura = await this.facturaModel.findByIdAndUpdate(id, { state });
+
+    return factura;
+  }
+
   private async createEventIcs(factura: CreateFacturaDto) {
     const dateStrat =
       dayjs(factura.fecha, { format: 'MM-DD-YYYY HH:mm:ss', locale: 'UTC-4' })

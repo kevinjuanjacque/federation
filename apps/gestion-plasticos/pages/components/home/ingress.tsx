@@ -98,6 +98,7 @@ export function Ingress() {
             id="fileinput"
             type="file"
             placeholder="Ingresar factura"
+            className="w-full"
             onChange={handleFileChange}
           />
 
