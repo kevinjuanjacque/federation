@@ -1,9 +1,4 @@
-import {
-  Button,
-  DatePicker,
-  DateRangePickerValue,
-  TextInput,
-} from '@tremor/react';
+import { Button, DatePicker, TextInput } from '@tremor/react';
 import axios from 'axios';
 import { es } from 'date-fns/locale';
 import dayjs from 'dayjs';
@@ -35,7 +30,7 @@ export function Ingress() {
   const handleOnSubmit = async (e: any) => {
     e.preventDefault();
 
-    let data = new FormData();
+    const data = new FormData();
     data.append('file', file!);
     data.append('numero', numero!);
     data.append('fecha', fecha);

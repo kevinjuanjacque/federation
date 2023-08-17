@@ -18,6 +18,7 @@
     "@nestjs/serve-static": "^4.0.0",
     "@nx/next": "16.5.3",
     "@tremor/react": "^3.4.1",
+    "@vercel/analytics": "^1.0.2",
     "axios": "^1.4.0",
     "dayjs": "^1.11.9",
     "mongoose": "^7.4.0",

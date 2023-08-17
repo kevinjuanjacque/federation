@@ -46,17 +46,17 @@ export class FacturasController {
     return await this.facturasService.createFactura(body);
   }
 
+  @Get()
+  async getFacturas() {
+    return this.facturasService.getAllFacturas();
+  }
+
   @UseGuards(AuthGuard)
   @Get('file/:fileName')
   async getFileFacturas(@Param('fileName') fileName: string, @Res() res) {
     res.sendFile(this.facturasService.getAssetFileFactura(fileName));
 
     return this.facturasService.getAssetFileFactura(fileName);
-  }
-
-  @Get()
-  async getFacturas() {
-    return this.facturasService.getAllFacturas();
   }
 
   @Put(':id')
