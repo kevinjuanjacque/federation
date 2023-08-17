@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtVerify } from './lib/jwt';
+import jwt from 'jsonwebtoken';
+import { jwtConstants } from './helpers/constanst';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -11,7 +12,7 @@ export async function middleware(request: NextRequest) {
   if (!token) {
     return NextResponse.json({ message: 'No autorizado' }, { status: 401 });
   } else {
-    const payload = jwtVerify(token.split(' ')[1]);
+    const payload = jwt.verify(token.split(' ')[1], jwtConstants.secret);
     if (payload['email'] !== 'admin')
       return NextResponse.json({ message: 'No autorizado' }, { status: 401 });
   }
@@ -22,4 +23,6 @@ export async function middleware(request: NextRequest) {
 // See "Matching Paths" below to learn more
 export const config = {
   matcher: '/api/facturas/:path*',
+  runtime: 'experimental-edge',
+  unstable_allowDynamic: ['**/node_modules/lodash/**/*.js'],
 };

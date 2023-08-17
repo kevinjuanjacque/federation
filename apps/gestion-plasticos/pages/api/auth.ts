@@ -1,10 +1,13 @@
-import { jwtSign, jwtVerify } from '../../lib/jwt';
+import { jwtConstants } from '../../helpers/constanst';
+import jwt from 'jsonwebtoken';
 
 const Auth = (req, res) => {
   if (req.method === 'POST') {
     const { email, password } = req.body;
     if (email === 'admin' && password === 'admin') {
-      const token = jwtSign({ email });
+      const token = jwt.sign({ email }, jwtConstants.secret, {
+        expiresIn: '365 days',
+      });
       return res.status(200).json({ token });
     }
 
@@ -12,7 +15,7 @@ const Auth = (req, res) => {
   }
   if (req.method === 'GET') {
     const token = req.headers['authorization']?.split(' ')[1];
-    const payload = jwtVerify(token);
+    const payload = jwt.verify(token, jwtConstants.secret);
     if (payload['email'] === 'admin')
       return res.status(200).json({ message: 'OK' });
 
