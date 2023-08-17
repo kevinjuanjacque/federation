@@ -64,7 +64,7 @@ export const Index = () => {
           process.env.NEXT_PUBLIC_BACKEND_URL + '/facturas/precios',
           {
             headers: {
-              Authorization: localStorage.getItem('token'),
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
             },
           }
         );
@@ -118,7 +118,7 @@ export const Index = () => {
         {
           responseType: 'arraybuffer',
           headers: {
-            Authorization: localStorage.getItem('token'),
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
           },
         }
       );
