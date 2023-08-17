@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 
 export function Index() {
-  const [disabled, useDisabled] = useState(true);
+  const [disabled, setDisabled] = useState(true);
   const [Loading, setLoading] = useState(false);
   const [Errors, setErrors] = useState(false);
   const [Email, setEmail] = useState('');
@@ -19,9 +19,9 @@ export function Index() {
     let mounted = true;
     if (mounted) {
       if (Email.length > 4 && Password.length > 4) {
-        useDisabled(false);
+        setDisabled(false);
       } else {
-        useDisabled(true);
+        setDisabled(true);
       }
     }
     return () => {

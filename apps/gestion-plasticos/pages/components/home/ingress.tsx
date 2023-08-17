@@ -43,7 +43,7 @@ export function Ingress() {
     try {
       setLoadin(true);
       await axios.post(
-        process.env.NEXT_PUBLIC_BACKEND_URL + '/facturas',
+        process.env.NEXT_PUBLIC_BACKEND_URL_V2 + '/facturas',
         data,
         {
           headers: {

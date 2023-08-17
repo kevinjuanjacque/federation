@@ -38,7 +38,7 @@ export function History() {
   const handleUpdatedFatura = async (state: string, id: string) => {
     try {
       const resp = await axios.put(
-        process.env.NEXT_PUBLIC_BACKEND_URL + '/facturas/' + id,
+        process.env.NEXT_PUBLIC_BACKEND_URL_V2 + '/facturas/' + id,
         {
           state,
         },
@@ -59,7 +59,7 @@ export function History() {
   useEffect(() => {
     const getHistory = async () => {
       const resp = await axios.get(
-        process.env.NEXT_PUBLIC_BACKEND_URL + '/facturas',
+        process.env.NEXT_PUBLIC_BACKEND_URL_V2 + '/facturas',
         {
           headers: {
             Authorization: localStorage.getItem('token')
